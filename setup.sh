@@ -1,22 +1,22 @@
 #!/bin/bash
 
-# setup.sh - Настройка автозапуска main.py проекта hummer
+# setup.sh - Настройка автозапуска main.py проекта bot_rsi_macd
 
 # Прерывать выполнение при ошибке
 set -e
 
 # Переменные
-PROJECT_DIR="/bot_hummer"
+PROJECT_DIR="/bot_rsi_macd"
 VENV_DIR="$PROJECT_DIR/venv"
-SERVICE_NAME="hummer.service"
+SERVICE_NAME="bot_rsi_macd.service"
 SERVICE_FILE="/etc/systemd/system/$SERVICE_NAME"
-TIMER_NAME="hummer.timer"
+TIMER_NAME="bot_rsi_macd.timer"
 TIMER_FILE="/etc/systemd/system/$TIMER_NAME"
 USER="$(whoami)"
 PYTHON_EXEC="$VENV_DIR/bin/python"
 MAIN_SCRIPT="$PROJECT_DIR/main.py"
 
-echo "=== Начало настройки проекта hummer ==="
+echo "=== Начало настройки проекта bot_rsi_macd ==="
 
 # Проверка наличия директории проекта
 if [ ! -d "$PROJECT_DIR" ]; then
@@ -67,7 +67,7 @@ echo "🔧 Создание systemd сервиса в $SERVICE_FILE..."
 
 cat <<EOL > "$SERVICE_FILE"
 [Unit]
-Description=Hummer Project Service
+Description=bot_rsi_macd Project Service
 After=network.target
 
 [Service]
@@ -87,7 +87,7 @@ echo "🔧 Создание systemd таймера в $TIMER_FILE..."
 
 cat <<EOL > "$TIMER_FILE"
 [Unit]
-Description=Run Hummer Project
+Description=Run bot_rsi_macd Project
 
 [Timer]
 OnCalendar=*:0/5

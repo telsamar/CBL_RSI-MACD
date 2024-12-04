@@ -171,6 +171,7 @@ async def main():
 
     async with aiohttp.ClientSession() as session:
         symbols = await get_usdt_perpetual_symbols()
+        symbols = [symbol for symbol in symbols if symbol.upper() != 'USDCUSDT']
         # logger.info(f"Доступные символы для USDT бессрочных контрактов: {symbols}")
 
         if not symbols:
