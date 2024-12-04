@@ -22,7 +22,7 @@ class SharedState:
 load_dotenv()
 BOT_TOKEN = os.getenv('BOT_TOKEN')
 CHAT_ID = os.getenv('CHAT_ID')
-MESSAGE_LIMIT = int(os.getenv('MESSAGE_LIMIT', 10))  # Добавлено
+MESSAGE_LIMIT = int(os.getenv('MESSAGE_LIMIT', 20))  # Добавлено
 
 if not BOT_TOKEN or not CHAT_ID:
     raise ValueError("BOT_TOKEN и CHAT_ID должны быть установлены в .env файле.")
