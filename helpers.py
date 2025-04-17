@@ -47,9 +47,9 @@ def analyze_candles(candles: List[Dict[str, float]], k_period: int = 14, d_perio
 
     # Условия генерации сигналов только при наличии всех индикаторов
     if percent_k is not None and percent_d is not None and macd is not None:
-        if percent_k < oversold and macd > 0:
+        if percent_k < oversold and percent_d < oversold:
             signal_long = True
-        elif percent_k > overbought and macd < 0:
+        elif percent_k > overbought and percent_d > overbought:
             signal_short = True
 
     if signal_long:

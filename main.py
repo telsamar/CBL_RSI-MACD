@@ -63,6 +63,8 @@ async def process_symbol(symbol: str, intervals: dict, session: aiohttp.ClientSe
                 percent_k = analysis.get('%K')
                 percent_d = analysis.get('%D')
                 macd = analysis.get('MACD')
+                if percent_k > 10: return
+                if macd < 0: return
 
                 # Логируем значения индикаторов
                 if percent_k is not None and percent_d is not None and macd is not None:
@@ -143,22 +145,43 @@ async def main():
     Главная функция.
     """
     is_manual_run = os.getenv("MANUAL_RUN", "false").lower() == "true"
-    current_minute = datetime.now().minute
+    current_time = datetime.now()
+    current_minute = current_time.minute
+    current_hour = current_time.hour
+    current_day = current_time.day  # Добавлено, если потребуется
 
-    # Определяем интервалы на основе текущей минуты
+    # Определяем интервалы на основе текущего времени
     intervals = {
-        '5': '5m',
-        '15': '15m'
+        # '1': '1m',
+        # '5': '5m',
+        '15': '15m',
+        # '30': '30m',
+        # '60': '1h',
+        # '240': '4h',    # Добавлено
+        # '720': '12h',   # Добавлено
+        # 'D': '1d'    # Добавлено
     }
 
     # Фильтруем интервалы на основе времени запуска
     if not is_manual_run:  # Если скрипт не запущен вручную
-        if current_minute % 15 == 0:
-            intervals = {k: v for k, v in intervals.items() if k in ['15', '5']}
+        if current_minute % 60 == 0:
+            if current_hour % 12 == 0 and current_minute == 0:
+                # Время для дневного и 12-часового интервала
+                intervals = {k: v for k, v in intervals.items() if k in ['5', '15', '30', '60', '240', '720', '1440']}
+            elif current_hour % 4 == 0 and current_minute == 0:
+                # Время для 4-часового интервала
+                intervals = {k: v for k, v in intervals.items() if k in ['5', '15', '30', '60', '240']}
+            else:
+                intervals = {k: v for k, v in intervals.items() if k in ['5', '15', '30', '60']}
+        elif current_minute % 30 == 0:
+            intervals = {k: v for k, v in intervals.items() if k in ['5', '15', '30']}
+        elif current_minute % 15 == 0:
+            intervals = {k: v for k, v in intervals.items() if k in ['5', '15']}
         elif current_minute % 5 == 0:
             intervals = {k: v for k, v in intervals.items() if k in ['5']}
         else:
-            logger.info("Скрипт запущен в неподходящее время. Завершение.")
+            intervals = {k: v for k, v in intervals.items() if k in ['1']}
+            logger.info("Запуск скрипта с 1-минутным интервалом.")
             return
 
     # Ограничение количества одновременных задач

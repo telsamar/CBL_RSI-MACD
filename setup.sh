@@ -90,7 +90,7 @@ cat <<EOL > "$TIMER_FILE"
 Description=Run bot_rsi_macd Project
 
 [Timer]
-OnCalendar=*:0/5
+OnCalendar=*:0/15
 Persistent=true
 
 [Install]
